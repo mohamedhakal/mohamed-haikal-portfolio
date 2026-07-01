@@ -463,6 +463,19 @@ body.is-touch .contact-form__submit {
   color: #fca5a5;
 }
 
+.contact-form__note {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--gray-600);
+}
+
+.contact-form__note strong {
+  font-weight: 400;
+  color: var(--gray-400);
+}
+
 /* ─── Animations ─────────────────────────────────────────────── */
 
 @keyframes hero-fade-in {
