@@ -4,87 +4,74 @@ const submitBtn = form?.querySelector(".contact-form__submit");
 const submitText = form?.querySelector(".contact-form__submit-text");
 const submitLoading = form?.querySelector(".contact-form__submit-loading");
 
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/he1is1mohamed@gmail.com";
+const FORM_ENDPOINT = "https://formsubmit.co/he1is1mohamed@gmail.com";
 
 function showStatus(message, type) {
+  if (!status) return;
   status.textContent = message;
   status.className = `contact-form__status${type ? ` contact-form__status--${type}` : ""}`;
 }
 
-if (window.location.protocol === "file:") {
-  showStatus(
-    "This form must be opened through a web server (not as a local file). Deploy the site or run a local server to send messages.",
-    "error"
-  );
+function setSubmitting(isSubmitting) {
+  if (!submitBtn || !submitText || !submitLoading) return;
+  submitBtn.disabled = isSubmitting;
+  submitText.hidden = isSubmitting;
+  submitLoading.hidden = !isSubmitting;
 }
 
-if (form) {
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+function setupFormSubmit() {
+  const nextInput = form.querySelector('input[name="_next"]');
+  const replyToInput = form.querySelector('input[name="_replyto"]');
 
+  if (nextInput && window.location.protocol !== "file:") {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.search = "?sent=1";
+    nextInput.value = nextUrl.toString();
+  }
+
+  form.setAttribute("action", FORM_ENDPOINT);
+  form.setAttribute("method", "POST");
+
+  form.addEventListener("submit", (e) => {
     if (window.location.protocol === "file:") {
+      e.preventDefault();
       showStatus(
-        "Cannot send from a local file. Open this site through a web server or deploy it online.",
+        "Cannot send from a local file. Use the live site or run a local web server.",
         "error"
       );
       return;
     }
 
     if (!form.checkValidity()) {
+      e.preventDefault();
       form.reportValidity();
       return;
     }
 
-    submitBtn.disabled = true;
-    submitText.hidden = true;
-    submitLoading.hidden = false;
-    showStatus("");
-
-    try {
-      const response = await fetch(FORM_ENDPOINT, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
-      });
-
-      const data = await response.json().catch(() => null);
-
-      if (data?.success === "true" || data?.success === true) {
-        form.reset();
-        showStatus("Message sent successfully. I'll get back to you soon.", "success");
-        return;
-      }
-
-      const message = data?.message || "Failed to send your message.";
-
-      if (/activation/i.test(message)) {
-        showStatus(
-          "Almost there — check he1is1mohamed@gmail.com (and spam) for a FormSubmit activation email and click the link. Then try again.",
-          "error"
-        );
-        return;
-      }
-
-      if (/web server/i.test(message)) {
-        showStatus(
-          "This form only works when the site is served through a web server, not opened as a local file.",
-          "error"
-        );
-        return;
-      }
-
-      throw new Error(message);
-    } catch (error) {
-      showStatus(
-        error.message === "Failed to fetch"
-          ? "Network error. Check your connection and try again."
-          : `Something went wrong. ${error.message || "Please email he1is1mohamed@gmail.com directly."}`,
-        "error"
-      );
-    } finally {
-      submitBtn.disabled = false;
-      submitText.hidden = false;
-      submitLoading.hidden = true;
+    const emailField = form.querySelector("#email");
+    if (replyToInput && emailField) {
+      replyToInput.value = emailField.value;
     }
+
+    setSubmitting(true);
+    showStatus("Sending your message...");
   });
+}
+
+const params = new URLSearchParams(window.location.search);
+
+if (params.get("sent") === "1") {
+  showStatus("Message sent successfully. I'll get back to you soon.", "success");
+  window.history.replaceState({}, "", window.location.pathname);
+}
+
+if (window.location.protocol === "file:") {
+  showStatus(
+    "Open this page through a web server or the live site to send messages.",
+    "error"
+  );
+}
+
+if (form) {
+  setupFormSubmit();
 }
