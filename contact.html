@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="page-contact">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Get in touch — send a message." />
+  <title>Mohamed Haikal - Contact</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page-contact">
+  <div class="ambient-glow ambient-glow--blue" aria-hidden="true"></div>
+  <div class="ambient-glow ambient-glow--purple" aria-hidden="true"></div>
+  <div class="ambient-glow ambient-glow--white" aria-hidden="true"></div>
+
+  <canvas id="dot-grid" aria-hidden="true"></canvas>
+
+  <div id="cursor" class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+  <main class="hero hero--contact">
+    <div class="hero__content hero__content--contact">
+      <a href="index.html" class="contact__back" data-cursor-hover>← Back</a>
+
+      <p class="hero__eyebrow">Contact</p>
+      <h1 class="hero__title">Get in Touch</h1>
+      <p class="hero__subtitle">
+        Have a question or want to work together? <br> Send me a message.
+      </p>
+
+      <form
+        id="contact-form"
+        class="contact-form"
+        action="https://formsubmit.co/he1is1mohamed@gmail.com"
+        method="POST"
+        novalidate
+      >
+        <input type="hidden" name="_subject" value="New portfolio contact message" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="text" name="_honey" class="contact-form__honey" tabindex="-1" autocomplete="off" />
+
+        <div class="contact-form__field">
+          <label class="contact-form__label" for="name">Full Name</label>
+          <input
+            class="contact-form__input"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Your name"
+            required
+            autocomplete="name"
+          />
+        </div>
+
+        <div class="contact-form__field">
+          <label class="contact-form__label" for="email">Email</label>
+          <input
+            class="contact-form__input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="contact-form__field">
+          <label class="contact-form__label" for="message">Message</label>
+          <textarea
+            class="contact-form__input contact-form__textarea"
+            id="message"
+            name="message"
+            placeholder="Your message..."
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="contact-form__submit" data-cursor-hover>
+          <span class="contact-form__submit-text">Send Message</span>
+          <span class="contact-form__submit-loading" hidden>Sending...</span>
+        </button>
+
+        <p class="contact-form__status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>
