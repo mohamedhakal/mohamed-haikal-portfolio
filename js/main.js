@@ -138,23 +138,37 @@ class DotGrid {
 class CustomCursor {
   constructor(el) {
     this.el = el;
-    this.dot = el.querySelector(".cursor__dot");
+    this.core = el.querySelector(".cursor__core");
     this.ring = el.querySelector(".cursor__ring");
 
-    this.pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    this.target = { x: this.pos.x, y: this.pos.y };
+    this.corePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    this.ringPos = { x: this.corePos.x, y: this.corePos.y };
+    this.target = { x: this.corePos.x, y: this.corePos.y };
 
-    document.addEventListener("mousemove", (e) => {
+    this.state = { hovering: false, text: false, pressing: false };
+
+    window.addEventListener("pointermove", (e) => {
       this.target.x = e.clientX;
       this.target.y = e.clientY;
+      this.el.classList.remove("is-hidden");
+    }, { passive: true });
+
+    window.addEventListener("pointerdown", () => {
+      this.state.pressing = true;
+      this.el.classList.add("is-pressing");
     });
 
-    document.addEventListener("mouseleave", () => {
-      this.el.style.opacity = "0";
+    window.addEventListener("pointerup", () => {
+      this.state.pressing = false;
+      this.el.classList.remove("is-pressing");
     });
 
-    document.addEventListener("mouseenter", () => {
-      this.el.style.opacity = "1";
+    document.documentElement.addEventListener("pointerleave", () => {
+      this.el.classList.add("is-hidden");
+    });
+
+    document.documentElement.addEventListener("pointerenter", () => {
+      this.el.classList.remove("is-hidden");
     });
 
     this.setupHover();
@@ -162,28 +176,51 @@ class CustomCursor {
   }
 
   setupHover() {
-    const hoverables = document.querySelectorAll(
-      "[data-cursor-hover], a, button, input, textarea"
-    );
+    const interactiveSelector =
+      "a, button, [data-cursor-hover], input, textarea, select, label";
 
-    hoverables.forEach((el) => {
-      el.addEventListener("mouseenter", () => this.el.classList.add("is-hovering"));
-      el.addEventListener("mouseleave", () => this.el.classList.remove("is-hovering"));
+    document.addEventListener("pointerover", (e) => {
+      const target = e.target.closest(interactiveSelector);
+      if (!target) return;
+
+      const isText = target.matches("input, textarea");
+      this.state.hovering = !isText;
+      this.state.text = isText;
+
+      this.el.classList.toggle("is-hovering", this.state.hovering);
+      this.el.classList.toggle("is-text", this.state.text);
+    });
+
+    document.addEventListener("pointerout", (e) => {
+      const from = e.target.closest(interactiveSelector);
+      const to = e.relatedTarget?.closest?.(interactiveSelector);
+
+      if (from && from !== to) {
+        this.state.hovering = false;
+        this.state.text = false;
+        this.el.classList.remove("is-hovering", "is-text");
+      }
     });
   }
 
+  lerp(current, target, speed) {
+    return current + (target - current) * speed;
+  }
+
+  setLayerPosition(el, pos) {
+    el.style.left = `${pos.x}px`;
+    el.style.top = `${pos.y}px`;
+  }
+
   animate() {
-    // Lerp — dot follows tightly, ring trails behind
-    this.pos.x += (this.target.x - this.pos.x) * 0.35;
-    this.pos.y += (this.target.y - this.pos.y) * 0.35;
+    this.corePos.x = this.lerp(this.corePos.x, this.target.x, 0.3);
+    this.corePos.y = this.lerp(this.corePos.y, this.target.y, 0.3);
 
-    const ringX = this.pos.x + (this.target.x - this.pos.x) * -0.3;
-    const ringY = this.pos.y + (this.target.y - this.pos.y) * -0.3;
+    this.ringPos.x = this.lerp(this.ringPos.x, this.target.x, 0.16);
+    this.ringPos.y = this.lerp(this.ringPos.y, this.target.y, 0.16);
 
-    this.dot.style.left = `${this.pos.x}px`;
-    this.dot.style.top = `${this.pos.y}px`;
-    this.ring.style.left = `${ringX}px`;
-    this.ring.style.top = `${ringY}px`;
+    this.setLayerPosition(this.core, this.corePos);
+    this.setLayerPosition(this.ring, this.ringPos);
 
     requestAnimationFrame(() => this.animate());
   }

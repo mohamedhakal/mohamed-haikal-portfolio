@@ -14,16 +14,17 @@ A premium, minimal portfolio landing page with a contact form. Built with vanill
 
 ## Pages
 
-| Page | File | Description |
-|------|------|-------------|
-| Home | `index.html` | Portfolio under construction landing |
-| Contact | `contact.html` | Get in touch form |
+| Page | URL | Description |
+|------|-----|-------------|
+| Home | `/` | Portfolio landing page (`index.html`) |
+| Contact | `/contact/` | Get in touch form (`contact/index.html`) |
 
 ## Project Structure
 
 ```
-├── index.html          # Landing page
-├── contact.html        # Contact form page
+├── index.html          # Home page (start here)
+├── contact/
+│   └── index.html      # Contact page
 ├── css/
 │   └── style.css       # All styles
 ├── js/
@@ -36,7 +37,7 @@ A premium, minimal portfolio landing page with a contact form. Built with vanill
 
 ## Getting Started
 
-This is a static site. Serve it through a web server — do not open the HTML files directly (`file://`), or the contact form will not work.
+This is a static site. **Open `index.html` through a web server** — do not double-click HTML files (`file://`), or assets and the contact form may not work.
 
 ### Option 1: Local server (Node)
 
@@ -44,7 +45,7 @@ This is a static site. Serve it through a web server — do not open the HTML fi
 npx serve .
 ```
 
-Then open `http://localhost:3000`.
+Then open `http://localhost:3000` — that is your **Home** page.
 
 ### Option 2: Python
 
@@ -56,7 +57,7 @@ Then open `http://localhost:8000`.
 
 ### Option 3: GitHub Pages
 
-Deploy the repo via GitHub Pages to host the site online.
+Live site: [mohamedhakal.github.io/mohamed-haikal-portfolio](https://mohamedhakal.github.io/mohamed-haikal-portfolio/)
 
 ## Contact Form Setup
 
