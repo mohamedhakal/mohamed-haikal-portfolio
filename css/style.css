@@ -556,6 +556,58 @@ body.is-touch .contact-form__submit {
   color: #fca5a5;
 }
 
+.contact-form__links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.contact-form__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 7.5rem;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--gray-400);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  transition:
+    color 0.4s var(--ease-smooth),
+    border-color 0.4s var(--ease-smooth),
+    background 0.4s var(--ease-smooth);
+}
+
+.contact-form__link-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contact-form__link:first-child .contact-form__link-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
+.contact-form__link:hover,
+.contact-form__link:focus-visible {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+}
+
 .contact-form__note {
   text-align: center;
   font-size: 0.75rem;
